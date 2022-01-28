@@ -2,6 +2,8 @@
 
 ## Description
 
+Simplifies viewing and navigating large vSmart policies.
+
 This python script will convert a vSmart CLI policy into an HTML page with hyperlinks to the different elements of the policy.
 
 ## Instructions

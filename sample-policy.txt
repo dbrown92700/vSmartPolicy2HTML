@@ -1,0 +1,157 @@
+policy
+ sla-class Gold
+  loss    2
+  latency 350
+ !
+ sla-class Silver
+  loss    3
+  latency 350
+ !
+ sla-class Voice
+  loss    1
+  latency 350
+  jitter  20
+ !
+ data-policy PH_ALL_DATA-POLICY
+  vpn-list SERVICE_VPN_10
+   sequence 10
+    match
+     source-data-prefix-list RFC1918
+     dscp                    46
+    !
+    action accept
+     cflowd
+     set
+      forwarding-class Queue0
+     !
+    !
+   !
+   sequence 15
+    match
+     source-data-prefix-list RFC1918
+     app-list                VOICE_CONTROL
+    !
+    action accept
+     cflowd
+    !
+   !
+   sequence 35
+    match
+     source-data-prefix-list      RFC1918
+     destination-data-prefix-list RFC1918
+     app-list                     MICROSOFT_APPS
+     destination-port             443 80
+    !
+    action accept
+     cflowd
+     set
+      forwarding-class Queue3
+     !
+    !
+   !
+ app-route-policy AAR_POLICY
+  vpn-list SERVICE_VPN_10
+   sequence 5
+    match
+     app-list VOICE_CONTROL
+    !
+    action
+     count                      VOICE_CONTROL
+     backup-sla-preferred-color biz-internet public-internet
+     sla-class Voice preferred-color mpls metro-ethernet
+    !
+   !
+ cflowd-template CFLOWD_US
+  flow-inactive-timeout 120
+  collector vpn 10 address 1.2.3.4 port 2055 transport transport_udp source-interface loopback10
+ !
+ lists
+  vpn-list SERVICE_VPN_10
+   vpn 10
+  !
+  data-prefix-list ANY
+   ip-prefix 0.0.0.0/0
+  !
+  data-prefix-list RFC1918
+   ip-prefix 10.0.0.0/8
+   ip-prefix 172.16.0.0/12
+   ip-prefix 192.168.0.0/16
+  !
+  tloc-list VZ-VCP-vEdge-TLOC
+   tloc 1.1.1.1 color mpls encap ipsec preference 600
+   tloc 1.1.1.1 color biz-internet encap ipsec preference 550
+   tloc 1.1.2.1 color mpls encap ipsec preference 500
+   tloc 1.1.2.1 color biz-internet encap ipsec preference 450
+  !
+  app-list MICROSOFT_APPS
+   app bing
+   app microsoft
+   app ms-office-365
+   app ms-services
+   app sharepoint_admin
+   app sharepoint_blog
+   app sharepoint_calendar
+   app sharepoint_document
+   app sharepoint_online
+   app xbox_video
+   app xboxlive
+   app xboxlive_marketplace
+   app yammer
+  !
+  app-list VOICE_CONTROL
+   app rtcp
+   app sccp
+   app sip
+   app skinny
+  !
+  color-list MPLS-METRO-COLOR
+   color mpls
+   color metro-ethernet
+  !
+  !
+  site-list REMOTE-ALL
+   site-id 11100-11999
+   site-id 12100-12999
+   site-id 13100-13999
+   site-id 21100-21999
+   site-id 22100-22999
+   site-id 31100-31999
+   site-id 32100-32999
+   site-id 41100-41999
+   site-id 42100-42999
+  !
+  prefix-list RFC1918
+   ip-prefix 10.0.0.0/8
+   ip-prefix 172.16.0.0/12
+   ip-prefix 192.168.0.0/16
+  !
+ control-policy PH-ALL-In
+  sequence 5
+   match route
+    site-list PH-NA-East
+   !
+   action accept
+    set
+     omp-tag 12000
+    !
+   !
+  !
+  sequence 10
+   match route
+    site-list PH-NA-South
+   !
+   action accept
+    set
+     omp-tag 13000
+    !
+   !
+  !
+ !
+apply-policy
+ site-list REMOTE-ALL
+  control-policy PH-ALL-In in
+  data-policy PH_ALL_DATA-POLICY from-service
+  app-route-policy AAR_POLICY
+  cflowd-template  CFLOWD_US
+ !
+!

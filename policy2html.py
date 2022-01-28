@@ -50,7 +50,7 @@ def policy_to_html(filename):
 
     for lineNum, line in enumerate(config):
         if line == 'apply-policy\n':
-            config[lineNum] = '<a id="apply-policy"><b>apply-policy</b></a><br>\n'
+            config[lineNum] = '<a id="apply-policy"><b>apply-policy</b></a>\n'
             break
         if not ('!' in line):   # Skip lines with !
 
@@ -86,7 +86,7 @@ def policy_to_html(filename):
     apply_section = False
     for lineNum, line in enumerate(config):
 
-        if line == 'apply-policy\n':
+        if 'apply-policy' in line:
             apply_section = True
 
         leader = line.count(' ') - line.lstrip(' ').count(' ')
@@ -103,12 +103,13 @@ def policy_to_html(filename):
             if (not (leadernext > leader))\
                     or apply_section\
                     or ((not lists_section) and (lineSplit[0] == 'vpn-list')): # This is a config element
+                # print(apply_section)
                 for index, keyword in enumerate(lineSplit):
                     for element_type, instances in elements.items():
                         if keyword in instances:
                             if element_type in lineSplit[index - 1]:
-                                lineSplit[
-                                    index] = f'<a href="#{policy_elements[element_type]}:{keyword}">{keyword}' + '</a>'
+                                lineSplit[index] = f'<a href="#{policy_elements[element_type]}:{keyword}">{keyword}'\
+                                                   + '</a>'
                                 break
                 config[lineNum] = leader * ' ' + ' '.join(lineSplit)
 

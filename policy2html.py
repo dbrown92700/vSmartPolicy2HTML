@@ -132,7 +132,6 @@ def policy_to_html(filename):
     for index, line in enumerate(config):
         leader = line.count(' ') - line.lstrip(' ').count(' ')
         line = leader * '&nbsp;' * 3 + line.lstrip(' ')
-        # line = leader * ' ' * 3 + line.lstrip(' ')
         outfile.write(f'{index}:{line}'+'<br>\n')
     outfile.write('</html></body>')
     outfile.close()

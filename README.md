@@ -14,7 +14,7 @@ This python script will convert a vSmart CLI policy into an HTML page with hyper
 
 Save vSmart policy as a .txt file.
 
-NOTE: The script relies on space indents to correctly parse the configuration.  It expects that "policy" and "apply-policy" will have no spaces and each subsequent section or setting heirachy is indented by a single additional space.  This should be the standard CLI output.  Any issues with this indentation may cause the  parsing to fail.
+NOTE: The script relies on space indents to correctly parse the configuration.  It expects that "policy" and "apply-policy" will have no spaces and each subsequent section or setting heirachy is indented by a single additional space.  This should be the standard CLI output.  Any issues with this indentation may cause the  parsing to fail.  **If you copy the policy from the "Policy Preview" in vManage, the "sla-class" section may be indented with an extra space that needs to be removed.
 
 NOTE: The script has not been tested against all potential policy elements.
 

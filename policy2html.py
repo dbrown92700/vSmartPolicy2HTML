@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Copyright (c) 2012 Cisco and/or its affiliates.
+Copyright (c) 2022 Cisco and/or its affiliates.
 This software is licensed to you under the terms of the Cisco Sample
 Code License, Version 1.1 (the "License"). You may obtain a copy of the
 License at
@@ -14,7 +14,7 @@ or implied.
 """
 __author__ = "David Brown <davibrow@cisco.com>"
 __contributors__ = []
-__copyright__ = "Copyright (c) 2012 Cisco and/or its affiliates."
+__copyright__ = "Copyright (c) 2022 Cisco and/or its affiliates."
 __license__ = "Cisco Sample Code License, Version 1.1"
 
 import sys

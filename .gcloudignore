@@ -1,0 +1,40 @@
+# This file specifies files that are *not* uploaded to Google Cloud Platform
+# using gcloud. It follows the same syntax as .gitignore, with the addition of
+# "#!include" directives (which insert the entries of the given .gitignore-style
+# file at that point).
+#
+# For more information, run:
+#   $ gcloud topic gcloudignore
+#
+.gcloudignore
+# If you would like to upload your .git directory, .gitignore file or files
+# from your .gitignore file, remove the corresponding line
+# below:
+.git
+.gitignore
+
+# Python pycache:
+__pycache__/
+# Ignored by the build system
+/setup.cfg
+bin
+lib
+include
+
+.idea
+Screen Shot of Output.png
+thd_vSmart_policy_JAN-27.html
+7 AM.txt
+jabil-vsmart-policy.html
+policy2html.bak
+sample-policy.html
+thd_vSmart_policy_JAN-27.txt
+LICENSE.txt
+gpi-policy.html
+jabil-vsmart-policy.txt
+policy2html.py
+sample-policy.txt
+README.md
+gpi-policy.txt
+pyvenv.cfg
+

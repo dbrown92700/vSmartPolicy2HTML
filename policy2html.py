@@ -20,25 +20,25 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 import sys
 
 action_sections = ['match', 'set', 'action', 'sequence', 'local-tloc-list']
-policy_elements = {'sla-class': 'SC',\
-                   'data-policy': 'DP',\
-                   'data-prefix-list': 'DPL',\
-                   'prefix-list': 'PL',\
-                   'tloc-list': 'TL',\
-                   'app-list': 'AL',\
-                   'color-list': 'CL',\
-                   'site-list': 'SL',\
-                   'control-policy': 'CP',\
-                   'app-route-policy': 'ARP',\
+policy_elements = {'sla-class': 'SC',
+                   'data-policy': 'DP',
+                   'data-prefix-list': 'DPL',
+                   'prefix-list': 'PL',
+                   'tloc-list': 'TL',
+                   'app-list': 'AL',
+                   'color-list': 'CL',
+                   'site-list': 'SL',
+                   'control-policy': 'CP',
+                   'app-route-policy': 'ARP',
                    'cflowd-template': 'CT',
                    'vpn-list': 'VL'}
 
-def policy_to_html(filename):
+
+def policy_to_html(input_file):
 
     # Read the config into a list
 
-    outfile = open(f'{filename.rstrip(".txt")}.html', 'w')
-    file = open(filename)
+    file = open(input_file)
     config = file.readlines()
     file.close()
 
@@ -57,7 +57,7 @@ def policy_to_html(filename):
             # calculate the indent on this line vs. the next line
             leader = line.count(' ') - line.lstrip(' ').count(' ')
             nextline = config[lineNum + 1]
-            leadernext = nextline.count(' ') - nextline.lstrip(' ').count(' ')
+            leader_next = nextline.count(' ') - nextline.lstrip(' ').count(' ')
 
             # Track if we're parsing the lists section of the config
             if leader == 1:
@@ -66,17 +66,18 @@ def policy_to_html(filename):
                 else:
                     lists_section = False
 
-            if leadernext > leader: # This is a section line
+            if leader_next > leader:  # This is a section line
                 if ' ' in line.lstrip(' '):  # This has a name
-                    lineSplit = line.lstrip(' ').rstrip('\n').split()
-                    if (lineSplit[0] in action_sections) or ((not lists_section) and (lineSplit[0] == 'vpn-list')):
+                    line_split = line.lstrip(' ').rstrip('\n').split()
+                    if (line_split[0] in action_sections) or ((not lists_section) and (line_split[0] == 'vpn-list')):
                         pass
                     else:
-                        if not lineSplit[0] in elements:
-                            elements[lineSplit[0]] = []
-                        elements[lineSplit[0]].append(lineSplit[1])
+                        if not line_split[0] in elements:
+                            elements[line_split[0]] = []
+                        elements[line_split[0]].append(line_split[1])
                         config[lineNum] = leader * ' ' + \
-                                          f'{lineSplit[0]} <a id="{policy_elements[lineSplit[0]]}:{lineSplit[1]}"><b>{lineSplit[1]}'\
+                                          f'{line_split[0]} <a id="{policy_elements[line_split[0]]}:{line_split[1]}">' \
+                                          f'<b>{line_split[1]}'\
                                           + '</b></a>'
 
     #
@@ -85,6 +86,9 @@ def policy_to_html(filename):
 
     apply_section = False
     for lineNum, line in enumerate(config):
+
+        if '!' in line:
+            continue
 
         if 'apply-policy' in line:
             apply_section = True
@@ -96,28 +100,26 @@ def policy_to_html(filename):
             else:
                 lists_section = False
 
-        if not ('!' in line):   # Skip lines with !
-            nextline = config[lineNum + 1]
-            leadernext = nextline.count(' ') - nextline.lstrip(' ').count(' ')
-            lineSplit = line.lstrip(' ').rstrip('\n').split()
-            if (not (leadernext > leader))\
-                    or apply_section\
-                    or ((not lists_section) and (lineSplit[0] == 'vpn-list')): # This is a config element
-                # print(apply_section)
-                for index, keyword in enumerate(lineSplit):
-                    for element_type, instances in elements.items():
-                        if keyword in instances:
-                            if element_type in lineSplit[index - 1]:
-                                lineSplit[index] = f'<a href="#{policy_elements[element_type]}:{keyword}">{keyword}'\
-                                                   + '</a>'
-                                break
-                config[lineNum] = leader * ' ' + ' '.join(lineSplit)
+        nextline = config[lineNum + 1]
+        leader_next = nextline.count(' ') - nextline.lstrip(' ').count(' ')
+        line_split = line.lstrip(' ').rstrip('\n').split()
+        if (not (leader_next > leader))\
+                or apply_section\
+                or ((not lists_section) and (line_split[0] == 'vpn-list')):  # This is a config element
+            for index, keyword in enumerate(line_split):
+                for element_type, instances in elements.items():
+                    if keyword in instances:
+                        if element_type in line_split[index - 1]:
+                            line_split[index] = f'<a href="#{policy_elements[element_type]}:{keyword}">{keyword}'\
+                                               + '</a>'
+                            break
+            config[lineNum] = leader * ' ' + ' '.join(line_split)
 
     #
     # Create html file of the policy
     #
 
-    outfile = open(f'{filename.rstrip(".txt")}.html', 'w')
+    outfile = open(f'{input_file.rstrip(".txt")}.html', 'w')
     outfile.write('<html><body>\n<h1>Policy Elements</h1>\n')
     outfile.write('<h2>Apply Policy Section</h2><a href="#apply-policy">apply-policy</a><br>')
 
@@ -138,11 +140,11 @@ def policy_to_html(filename):
 
     return elements
 
+
 if __name__ == '__main__':
     if len(sys.argv) > 1:
-        file = sys.argv[1]
+        filename = sys.argv[1]
     else:
-        file = input('Name of policy file: ')
+        filename = input('Name of policy file: ')
 
-    elements = policy_to_html(file)
-
+    output = policy_to_html(filename)

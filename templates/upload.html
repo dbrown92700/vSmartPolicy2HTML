@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vSmart Policy to HTML</title>
+</head>
+<body>
+<h1>vSmart Policy to HTML Conversion Tool</h1>
+<h3>Built on the open source code posted at: <a href="https://developer.cisco.com/codeexchange/github/repo/CiscoSE/vSmartPolicy2HTML">
+    vSmartPolicy2HTML</a>
+</h3>
+This tool will convert the text config of vSmart central policy to an HTML linked page.<br>
+<br>
+<b>NOTE:</b> The tool relies heavily on the proper indention of each line to parse and markup the policy.<br>
+If there are indention irregularities in the policy, it may generate errors or incomplete markup.<br>
+<br>
+To convert your policy copy it to a .txt file from vManage:
+    <UL>
+        <LI>Navigate to the Configuration -> Policies -> Centralized Policy page</LI>
+        <LI>If using a vManage policy, Preview the active policy</LI>
+        <LI>If using a CLI policy, View the active policy</LI>
+        <LI>Copy results and save as a text file with .txt extension</LI>
+        <LI>Upload the file below</LI>
+    </UL>
+<p style="color: red">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          {{ message }}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+</p>
+<form method=post enctype=multipart/form-data>
+    <input type="file" name="file"><br><br>
+    <input type="submit">
+</form>
+</body>
+</html>

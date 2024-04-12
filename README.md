@@ -27,3 +27,7 @@ Execute the script.  The name of the policy file can be passed as an option or t
 or
 
 > ./policy2html.py sample-policy.txt
+
+# Author
+David Brown\
+davibrow@cisco.com

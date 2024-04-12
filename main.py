@@ -46,7 +46,8 @@ policy_elements = {'sla-class': 'SC',
                    'control-policy': 'CP',
                    'app-route-policy': 'ARP',
                    'cflowd-template': 'CT',
-                   'vpn-list': 'VL'
+                   'vpn-list': 'VL',
+                   'community-list': 'CmL'
                    }
 
 
